@@ -1,0 +1,34 @@
+diff -aurN cups-1.6.1.orig/config-scripts/cups-manpages.m4 cups-1.6.1/config-scripts/cups-manpages.m4
+--- cups-1.6.1.orig/config-scripts/cups-manpages.m4	2012-04-23 19:26:57.000000000 +0200
++++ cups-1.6.1/config-scripts/cups-manpages.m4	2012-09-16 22:46:21.215467165 +0200
+@@ -69,10 +69,10 @@
+ 		;;
+ 	Linux* | GNU* | Darwin*)
+ 		# Linux, GNU Hurd, and OS X
+-		MAN1EXT=1.gz
+-		MAN5EXT=5.gz
+-		MAN7EXT=7.gz
+-		MAN8EXT=8.gz
++		MAN1EXT=1
++		MAN5EXT=5
++		MAN7EXT=7
++		MAN8EXT=8
+ 		MAN8DIR=8
+ 		;;
+ 	*)
+diff -aurN cups-1.6.1.orig/man/Makefile cups-1.6.1/man/Makefile
+--- cups-1.6.1.orig/man/Makefile	2012-05-25 05:11:46.000000000 +0200
++++ cups-1.6.1/man/Makefile	2012-09-16 22:45:59.942697048 +0200
+@@ -154,10 +154,10 @@
+ 	done
+ 	for file in accept cupsreject reject; do \
+ 		$(RM) $(AMANDIR)/man$(MAN8DIR)/$$file.$(MAN8EXT); \
+-		$(LN) cupsaccept.$(MAN8EXT) $(AMANDIR)/man$(MAN8DIR)/$$file.$(MAN8EXT); \
++		echo ".so cupsaccept.$(MAN8EXT)" > $(AMANDIR)/man$(MAN8DIR)/$$file.$(MAN8EXT); \
+ 	done
+ 	$(RM) $(AMANDIR)/man$(MAN8DIR)/cupsdisable.$(MAN8EXT)
+-	$(LN) cupsenable.$(MAN8EXT) $(AMANDIR)/man$(MAN8DIR)/cupsdisable.$(MAN8EXT)
++	echo ".so cupsenable.$(MAN8EXT)" > $(AMANDIR)/man$(MAN8DIR)/cupsdisable.$(MAN8EXT)
+ 
+ 
+ #
