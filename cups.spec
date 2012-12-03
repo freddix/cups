@@ -1,7 +1,7 @@
 Summary:	Common Unix Printing System
 Name:		cups
 Version:	1.6.1
-Release:	3
+Release:	4
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -145,10 +145,11 @@ sed -i -e 's|.SILENT:.*||g' Makedefs.in
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/{pam.d,logrotate.d} \
-	$RPM_BUILD_ROOT%{systemdtmpfilesdir} \
-	$RPM_BUILD_ROOT/etc/modprobe.d \
-	$RPM_BUILD_ROOT/var/log/{,archive/}cups
+install -d $RPM_BUILD_ROOT/etc/{pam.d,logrotate.d}	\
+	$RPM_BUILD_ROOT%{systemdtmpfilesdir}		\
+	$RPM_BUILD_ROOT/etc/modprobe.d			\
+	$RPM_BUILD_ROOT/var/log/{,archive/}cups		\
+	$RPM_BUILD_ROOT%{_datadir}/cups/charsets
 
 %{__make} install \
 	BUILDROOT=$RPM_BUILD_ROOT	\
@@ -274,6 +275,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_ulibdir}/cups/notifier/*
 
 %{_datadir}/cups/banners
+%{_datadir}/cups/charsets
 %{_datadir}/cups/data
 %{_datadir}/cups/drivers
 %{_datadir}/cups/drv
