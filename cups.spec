@@ -1,7 +1,7 @@
 Summary:	Common Unix Printing System
 Name:		cups
 Version:	1.6.1
-Release:	4
+Release:	5
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
@@ -185,6 +185,10 @@ rm -rf $RPM_BUILD_ROOT%{_mandir}/{,es/,fr/}cat?
 rm -rf $RPM_BUILD_ROOT/etc/rc.d
 rm -rf $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/cupsd.conf.default
 
+# moved to cups-filters
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/cups/banners/*
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/cups/data/testprint
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -274,7 +278,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_ulibdir}/cups/monitor/*
 %attr(755,root,root) %{_ulibdir}/cups/notifier/*
 
-%{_datadir}/cups/banners
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data
 %{_datadir}/cups/drivers
