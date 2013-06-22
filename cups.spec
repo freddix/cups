@@ -1,12 +1,12 @@
 Summary:	Common Unix Printing System
 Name:		cups
-Version:	1.6.1
-Release:	5
+Version:	1.6.2
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
-Source0:	http://ftp.easysw.com/pub/cups/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	87ade07e3d1efd03c9c3add949cf9c00
+Source0:	http://www.cups.org/software/%{version}/%{name}-%{version}-source.tar.bz2
+# Source0-md5:	13c8b2b2336d42001abe4899766b62dc
 Source1:	%{name}.pamd
 Source2:	%{name}.logrotate
 Source3:	%{name}-modprobe.conf
@@ -18,19 +18,14 @@ Patch3:		%{name}-nostrip.patch
 Patch4:		%{name}-certs_FHS.patch
 Patch5:		%{name}-peercred.patch
 #
-# http://www.cups.org/str.php?L4156
-Patch10:	%{name}-avahi-missing-in-conditionals.patch
-# http://www.cups.org/str.php?L4157
-Patch11:	%{name}-conf-remove-obsolete-browse-directives.patch
-Patch12:	%{name}-no-export-ssllibs.patch
-# http://www.cups.org/str.php?L4158
-Patch13:	%{name}-recognize-remote-cups-queue-via-dnssd-uri.patch
+Patch10:	%{name}-no-export-ssllibs.patch
 # http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/net-print/cups/files/cups-1.5.0-systemd-socket.patch?revision=1.1
-Patch14:	%{name}-systemd-socket.patch
-# http://cups.org/str.php?L4155
-Patch15:	%{name}-usb-backend-reset-after-job-only-for-specific-devices.patch
-Patch16:	%{name}-default-error-policy-retry-job.patch
-Patch17:	%{name}-default-log-settings.patch
+Patch11:	%{name}-systemd-socket.patch
+Patch12:	%{name}-default-error-policy-retry-job.patch
+Patch13:	%{name}-statedir.patch
+Patch14:	%{name}-res_init.patch
+Patch15:	%{name}-get-ppd-file-for-statically-configured-ipp-shared-queues.patch
+Patch16:	%{name}-ppd-poll-with-client-conf.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -109,18 +104,17 @@ CUPS.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
-%patch15 -p0
+%patch15 -p1
 %patch16 -p1
-%patch17 -p1
 
-sed -i -e 's|.SILENT:.*||g' Makedefs.in
+%{__sed} -i 's|.SILENT:.*||g' Makedefs.in
 
 %build
 %{__aclocal} -I config-scripts
 %{__autoconf}
 %configure \
+	--disable-avahi					\
 	--disable-cdsassl				\
-	--disable-ldap					\
 	--enable-dbus					\
 	--enable-gnutls					\
 	--enable-pam					\
@@ -181,9 +175,8 @@ touch $RPM_BUILD_ROOT/var/cache/cups/ppds.dat
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/cups/ssl
 
 # check-files cleanup
-rm -rf $RPM_BUILD_ROOT%{_mandir}/{,es/,fr/}cat?
-rm -rf $RPM_BUILD_ROOT/etc/rc.d
-rm -rf $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/cupsd.conf.default
+%{__rm} -r $RPM_BUILD_ROOT/etc/rc.d
+%{__rm} -r $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/cupsd.conf.default
 
 # moved to cups-filters
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/cups/banners/*
@@ -212,6 +205,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.txt
 %attr(4755,lp,root) %{_bindir}/lppasswd
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/classes.conf
+%attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cups-files.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/printers.conf
 %attr(600,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/snmp.conf
 %attr(640,root,lp) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/cupsd.conf
