@@ -1,7 +1,7 @@
 Summary:	Common Unix Printing System
 Name:		cups
 Version:	1.6.2
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
