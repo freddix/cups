@@ -1,12 +1,13 @@
+# based on PLD Linux spec git://git.pld-linux.org/packages/.git
 Summary:	Common Unix Printing System
 Name:		cups
-Version:	1.6.2
-Release:	3
+Version:	1.7.5
+Release:	1
 Epoch:		1
 License:	GPL/LGPL
 Group:		Applications/Printing
 Source0:	http://www.cups.org/software/%{version}/%{name}-%{version}-source.tar.bz2
-# Source0-md5:	13c8b2b2336d42001abe4899766b62dc
+# Source0-md5:	5d893edc2957005f78e2b2423fdace2e
 Source1:	%{name}.pamd
 Source2:	%{name}.logrotate
 Source3:	%{name}-modprobe.conf
@@ -15,8 +16,7 @@ Patch0:		%{name}-config.patch
 Patch1:		%{name}-options.patch
 Patch2:		%{name}-man_pages_linking.patch
 Patch3:		%{name}-nostrip.patch
-Patch4:		%{name}-certs_FHS.patch
-Patch5:		%{name}-peercred.patch
+Patch4:		%{name}-peercred.patch
 #
 Patch10:	%{name}-no-export-ssllibs.patch
 # http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/net-print/cups/files/cups-1.5.0-systemd-socket.patch?revision=1.1
@@ -25,7 +25,6 @@ Patch12:	%{name}-default-error-policy-retry-job.patch
 Patch13:	%{name}-statedir.patch
 Patch14:	%{name}-res_init.patch
 Patch15:	%{name}-get-ppd-file-for-statically-configured-ipp-shared-queues.patch
-Patch16:	%{name}-ppd-poll-with-client-conf.patch
 URL:		http://www.cups.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -97,7 +96,6 @@ CUPS.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 
 %patch10 -p1
 %patch11 -p1
@@ -105,7 +103,6 @@ CUPS.
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
-%patch16 -p1
 
 %{__sed} -i 's|.SILENT:.*||g' Makedefs.in
 
@@ -243,14 +240,26 @@ rm -rf $RPM_BUILD_ROOT
 %{_ulibdir}/cups/cgi-bin/images
 
 %lang(ca) %{_ulibdir}/cups/cgi-bin/ca
+%lang(cs) %{_ulibdir}/cups/cgi-bin/cs
+%lang(de) %{_ulibdir}/cups/cgi-bin/de
 %lang(es) %{_ulibdir}/cups/cgi-bin/es
+%lang(fr) %{_ulibdir}/cups/cgi-bin/fr
+%lang(it) %{_ulibdir}/cups/cgi-bin/it
 %lang(ja) %{_ulibdir}/cups/cgi-bin/ja
+%lang(pt_BR) %{_ulibdir}/cups/cgi-bin/pt_BR
+%lang(ru) %{_ulibdir}/cups/cgi-bin/ru
 
 %dir %{_datadir}/cups/templates
 %{_datadir}/cups/templates/*.tmpl
 %lang(ca) %{_datadir}/cups/templates/ca
+%lang(cs) %{_datadir}/cups/templates/cs
+%lang(de) %{_datadir}/cups/templates/de
 %lang(es) %{_datadir}/cups/templates/es
+%lang(fr) %{_datadir}/cups/templates/fr
+%lang(it) %{_datadir}/cups/templates/it
 %lang(ja) %{_datadir}/cups/templates/ja
+%lang(pt_BR) %{_datadir}/cups/templates/pt_BR
+%lang(ru) %{_datadir}/cups/templates/ru
 
 %dir %{_datadir}/cups/model
 %dir %{_datadir}/cups/model/C
@@ -280,6 +289,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/cups/ipptool
 %{_datadir}/cups/mime
 %{_datadir}/cups/ppdc
+%{_datadir}/cups/usb
 
 %{_mandir}/man1/cupstestdsc.1*
 %{_mandir}/man1/cupstestppd.1*
@@ -303,8 +313,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/lp*
 
 %dir %attr(775,root,lp) /var/cache/cups
-%dir %attr(755,root,lp) /var/lib/cups
-%dir %attr(511,lp,sys) /var/lib/cups/certs
 %dir %attr(710,root,lp) /var/spool/cups
 %dir %attr(1770,root,lp) /var/spool/cups/tmp
 
@@ -319,8 +327,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(640,root,logs) %ghost /var/log/cups/page_log
 
 %lang(ca) %{_datadir}/locale/ca/cups_ca.po
+%lang(cs) %{_datadir}/locale/cs/cups_cs.po
+%lang(de) %{_datadir}/locale/de/cups_de.po
+%lang(df) %{_datadir}/locale/fr/cups_fr.po
 %lang(es) %{_datadir}/locale/es/cups_es.po
+%lang(it) %{_datadir}/locale/it/cups_it.po
 %lang(ja) %{_datadir}/locale/ja/cups_ja.po
+%lang(pt_BR) %{_datadir}/locale/pt_BR/cups_pt_BR.po
+%lang(ru) %{_datadir}/locale/ru/cups_ru.po
 
 %files lib
 %defattr(644,root,root,755)

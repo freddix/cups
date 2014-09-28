@@ -1,9 +1,9 @@
-diff -up cups-1.6b1/config.h.in.systemd-socket cups-1.6b1/config.h.in
---- cups-1.6b1/config.h.in.systemd-socket	2012-05-17 00:57:03.000000000 +0200
-+++ cups-1.6b1/config.h.in	2012-05-28 11:16:35.657250584 +0200
-@@ -506,6 +506,13 @@
-
-
+diff -up cups-1.7.2/config.h.in.systemd-socket cups-1.7.2/config.h.in
+--- cups-1.7.2/config.h.in.systemd-socket	2014-02-27 16:57:59.000000000 +0100
++++ cups-1.7.2/config.h.in	2014-04-17 14:05:04.104472016 +0200
+@@ -451,6 +451,13 @@
+ 
+ 
  /*
 + * Do we have systemd support?
 + */
@@ -14,10 +14,10 @@ diff -up cups-1.6b1/config.h.in.systemd-socket cups-1.6b1/config.h.in
 +/*
   * Various scripting languages...
   */
-
-diff -up cups-1.6b1/config-scripts/cups-systemd.m4.systemd-socket cups-1.6b1/config-scripts/cups-systemd.m4
---- cups-1.6b1/config-scripts/cups-systemd.m4.systemd-socket	2012-05-28 11:16:35.658250577 +0200
-+++ cups-1.6b1/config-scripts/cups-systemd.m4	2012-05-28 11:16:35.658250577 +0200
+ 
+diff -up cups-1.7.2/config-scripts/cups-systemd.m4.systemd-socket cups-1.7.2/config-scripts/cups-systemd.m4
+--- cups-1.7.2/config-scripts/cups-systemd.m4.systemd-socket	2014-04-17 14:05:04.104472016 +0200
++++ cups-1.7.2/config-scripts/cups-systemd.m4	2014-04-17 14:05:04.104472016 +0200
 @@ -0,0 +1,36 @@
 +dnl
 +dnl "$Id$"
@@ -55,9 +55,9 @@ diff -up cups-1.6b1/config-scripts/cups-systemd.m4.systemd-socket cups-1.6b1/con
 +dnl
 +dnl "$Id$"
 +dnl
-diff -up cups-1.6b1/configure.in.systemd-socket cups-1.6b1/configure.in
---- cups-1.6b1/configure.in.systemd-socket	2012-04-23 19:26:57.000000000 +0200
-+++ cups-1.6b1/configure.in	2012-05-28 11:16:35.658250577 +0200
+diff -up cups-1.7.2/configure.in.systemd-socket cups-1.7.2/configure.in
+--- cups-1.7.2/configure.in.systemd-socket	2013-07-08 23:15:13.000000000 +0200
++++ cups-1.7.2/configure.in	2014-04-17 14:05:04.104472016 +0200
 @@ -33,6 +33,7 @@ sinclude(config-scripts/cups-pam.m4)
  sinclude(config-scripts/cups-largefile.m4)
  sinclude(config-scripts/cups-dnssd.m4)
@@ -65,32 +65,32 @@ diff -up cups-1.6b1/configure.in.systemd-socket cups-1.6b1/configure.in
 +sinclude(config-scripts/cups-systemd.m4)
  sinclude(config-scripts/cups-defaults.m4)
  sinclude(config-scripts/cups-scripting.m4)
-
-@@ -66,6 +67,9 @@ AC_OUTPUT(Makedefs
-	  conf/snmp.conf
-	  cups-config
-	  data/testprint
-+          data/cups.service
-+          data/cups.socket
-+          data/cups.path
-	  desktop/cups.desktop
-	  doc/help/ref-cupsd-conf.html
-	  doc/help/standard.html
-diff -up cups-1.6b1/cups/usersys.c.systemd-socket cups-1.6b1/cups/usersys.c
---- cups-1.6b1/cups/usersys.c.systemd-socket	2012-04-23 19:26:57.000000000 +0200
-+++ cups-1.6b1/cups/usersys.c	2012-05-28 11:16:35.659250570 +0200
-@@ -975,7 +975,7 @@ cups_read_client_conf(
+ 
+@@ -67,6 +68,9 @@ AC_OUTPUT(Makedefs
+ 	  conf/snmp.conf
+ 	  cups-config
+ 	  data/testprint
++	  data/cups.service
++	  data/cups.socket
++	  data/cups.path
+ 	  desktop/cups.desktop
+ 	  doc/help/ref-cups-files-conf.html
+ 	  doc/help/ref-cupsd-conf.html
+diff -up cups-1.7.2/cups/usersys.c.systemd-socket cups-1.7.2/cups/usersys.c
+--- cups-1.7.2/cups/usersys.c.systemd-socket	2014-03-05 22:22:12.000000000 +0100
++++ cups-1.7.2/cups/usersys.c	2014-04-17 14:05:04.105472002 +0200
+@@ -1050,7 +1050,7 @@ cups_read_client_conf(
      struct stat	sockinfo;		/* Domain socket information */
-
+ 
      if (!stat(CUPS_DEFAULT_DOMAINSOCKET, &sockinfo) &&
 -	(sockinfo.st_mode & S_IRWXO) == S_IRWXO)
 +	(sockinfo.st_mode & (S_IROTH | S_IWOTH)) == (S_IROTH | S_IWOTH))
        cups_server = CUPS_DEFAULT_DOMAINSOCKET;
      else
  #endif /* CUPS_DEFAULT_DOMAINSOCKET */
-diff -up cups-1.6b1/data/cups.path.in.systemd-socket cups-1.6b1/data/cups.path.in
---- cups-1.6b1/data/cups.path.in.systemd-socket	2012-05-28 11:16:35.659250570 +0200
-+++ cups-1.6b1/data/cups.path.in	2012-05-28 11:16:35.659250570 +0200
+diff -up cups-1.7.2/data/cups.path.in.systemd-socket cups-1.7.2/data/cups.path.in
+--- cups-1.7.2/data/cups.path.in.systemd-socket	2014-04-17 14:05:04.105472002 +0200
++++ cups-1.7.2/data/cups.path.in	2014-04-17 14:05:04.105472002 +0200
 @@ -0,0 +1,8 @@
 +[Unit]
 +Description=CUPS Printer Service Spool
@@ -100,62 +100,65 @@ diff -up cups-1.6b1/data/cups.path.in.systemd-socket cups-1.6b1/data/cups.path.i
 +
 +[Install]
 +WantedBy=multi-user.target
-diff -up cups-1.6b1/data/cups.service.in.systemd-socket cups-1.6b1/data/cups.service.in
---- cups-1.6b1/data/cups.service.in.systemd-socket	2012-05-28 11:16:35.659250570 +0200
-+++ cups-1.6b1/data/cups.service.in	2012-05-28 11:16:35.659250570 +0200
-@@ -0,0 +1,10 @@
+diff -up cups-1.7.2/data/cups.service.in.systemd-socket cups-1.7.2/data/cups.service.in
+--- cups-1.7.2/data/cups.service.in.systemd-socket	2014-04-17 14:05:04.105472002 +0200
++++ cups-1.7.2/data/cups.service.in	2014-04-17 14:05:04.105472002 +0200
+@@ -0,0 +1,11 @@
 +[Unit]
 +Description=CUPS Printing Service
 +
 +[Service]
++Type=notify
 +ExecStart=@sbindir@/cupsd -f
 +PrivateTmp=true
 +
 +[Install]
 +Also=cups.socket cups.path
 +WantedBy=printer.target
-diff -up cups-1.6b1/data/cups.socket.in.systemd-socket cups-1.6b1/data/cups.socket.in
---- cups-1.6b1/data/cups.socket.in.systemd-socket	2012-05-28 11:16:35.660250563 +0200
-+++ cups-1.6b1/data/cups.socket.in	2012-05-28 11:16:35.660250563 +0200
-@@ -0,0 +1,8 @@
+diff -up cups-1.7.2/data/cups.socket.in.systemd-socket cups-1.7.2/data/cups.socket.in
+--- cups-1.7.2/data/cups.socket.in.systemd-socket	2014-04-17 14:05:04.105472002 +0200
++++ cups-1.7.2/data/cups.socket.in	2014-04-17 14:05:04.105472002 +0200
+@@ -0,0 +1,10 @@
 +[Unit]
 +Description=CUPS Printing Service Sockets
 +
 +[Socket]
 +ListenStream=@CUPS_DEFAULT_DOMAINSOCKET@
++ListenStream=@DEFAULT_IPP_PORT@
++BindIPv6Only=ipv6-only
 +
 +[Install]
 +WantedBy=sockets.target
-diff -up cups-1.6b1/data/Makefile.systemd-socket cups-1.6b1/data/Makefile
---- cups-1.6b1/data/Makefile.systemd-socket	2011-08-27 11:23:01.000000000 +0200
-+++ cups-1.6b1/data/Makefile	2012-05-28 11:16:35.660250563 +0200
+diff -up cups-1.7.2/data/Makefile.systemd-socket cups-1.7.2/data/Makefile
+--- cups-1.7.2/data/Makefile.systemd-socket	2013-05-29 13:51:34.000000000 +0200
++++ cups-1.7.2/data/Makefile	2014-04-17 14:05:04.106471988 +0200
 @@ -100,6 +100,12 @@ install-data:
-		$(INSTALL_DATA) $$file $(DATADIR)/ppdc; \
-	done
-	$(INSTALL_DIR) -m 755 $(DATADIR)/profiles
+ 		$(INSTALL_DATA) $$file $(DATADIR)/ppdc; \
+ 	done
+ 	$(INSTALL_DIR) -m 755 $(DATADIR)/profiles
 +	if test "x$(SYSTEMD_UNITS)" != "x" ; then \
 +		$(INSTALL_DIR) -m 755 $(SYSTEMDUNITDIR); \
 +		for file in $(SYSTEMD_UNITS); do \
 +			$(INSTALL_DATA) $$file $(SYSTEMDUNITDIR); \
 +		done; \
 +	fi
-
-
+ 
+ 
  #
 @@ -143,6 +149,9 @@ uninstall:
-	-$(RMDIR) $(DATADIR)/data
-	-$(RMDIR) $(DATADIR)/banners
-	-$(RMDIR) $(DATADIR)
+ 	-$(RMDIR) $(DATADIR)/data
+ 	-$(RMDIR) $(DATADIR)/banners
+ 	-$(RMDIR) $(DATADIR)
 +	for file in $(SYSTEMD_UNITS); do \
 +		$(RM) $(SYSTEMDUNITDIR)/$$file; \
 +	done
-
-
+ 
+ 
  #
-diff -up cups-1.6b1/Makedefs.in.systemd-socket cups-1.6b1/Makedefs.in
---- cups-1.6b1/Makedefs.in.systemd-socket	2012-05-28 11:16:35.648250647 +0200
-+++ cups-1.6b1/Makedefs.in	2012-05-28 11:16:35.660250563 +0200
-@@ -134,11 +134,13 @@ CXXFLAGS	=	@CPPFLAGS@ @CXXFLAGS@
+diff -up cups-1.7.2/Makedefs.in.systemd-socket cups-1.7.2/Makedefs.in
+--- cups-1.7.2/Makedefs.in.systemd-socket	2014-04-17 14:05:04.092472182 +0200
++++ cups-1.7.2/Makedefs.in	2014-04-17 14:05:04.106471988 +0200
+@@ -134,6 +134,7 @@ CXXFLAGS	=	@CPPFLAGS@ @CXXFLAGS@
  CXXLIBS		=	@CXXLIBS@
  DBUS_NOTIFIER	=	@DBUS_NOTIFIER@
  DBUS_NOTIFIERLIBS =	@DBUS_NOTIFIERLIBS@
@@ -163,24 +166,26 @@ diff -up cups-1.6b1/Makedefs.in.systemd-socket cups-1.6b1/Makedefs.in
  DNSSD_BACKEND	=	@DNSSD_BACKEND@
  DSOFLAGS	=	-L../cups @DSOFLAGS@
  DSOLIBS		=	@DSOLIBS@ $(COMMONLIBS)
- DNSSDLIBS	=	@DNSSDLIBS@
+@@ -141,6 +142,7 @@ DNSSDLIBS	=	@DNSSDLIBS@
+ IPPFIND_BIN	=	@IPPFIND_BIN@
+ IPPFIND_MAN	=	@IPPFIND_MAN@
  LAUNCHDLIBS	=	@LAUNCHDLIBS@
 +SDLIBS		=	@SDLIBS@
  LDFLAGS		=	-L../cgi-bin -L../cups -L../filter -L../ppdc \
-			-L../scheduler @LDARCHFLAGS@ \
-			@LDFLAGS@ @RELROFLAGS@ @PIEFLAGS@ $(OPTIM)
-@@ -229,6 +231,7 @@ PAMFILE		=	@PAMFILE@
-
+ 			-L../scheduler @LDARCHFLAGS@ \
+ 			@LDFLAGS@ @RELROFLAGS@ @PIEFLAGS@ $(OPTIM)
+@@ -232,6 +234,7 @@ PAMFILE		=	@PAMFILE@
+ 
  DEFAULT_LAUNCHD_CONF =	@DEFAULT_LAUNCHD_CONF@
  DBUSDIR		=	@DBUSDIR@
 +SYSTEMDUNITDIR  =       $(BUILDROOT)@systemdsystemunitdir@
-
-
+ 
+ 
  #
-diff -up cups-1.6b1/scheduler/client.h.systemd-socket cups-1.6b1/scheduler/client.h
---- cups-1.6b1/scheduler/client.h.systemd-socket	2012-03-22 21:30:20.000000000 +0100
-+++ cups-1.6b1/scheduler/client.h	2012-05-28 11:16:35.661250556 +0200
-@@ -77,6 +77,9 @@ typedef struct
+diff -up cups-1.7.2/scheduler/client.h.systemd-socket cups-1.7.2/scheduler/client.h
+--- cups-1.7.2/scheduler/client.h.systemd-socket	2013-08-02 00:23:18.000000000 +0200
++++ cups-1.7.2/scheduler/client.h	2014-04-17 14:05:04.106471988 +0200
+@@ -79,6 +79,9 @@ typedef struct
    int			fd;		/* File descriptor for this server */
    http_addr_t		address;	/* Bind address of socket */
    http_encryption_t	encryption;	/* To encrypt or not to encrypt... */
@@ -188,11 +193,11 @@ diff -up cups-1.6b1/scheduler/client.h.systemd-socket cups-1.6b1/scheduler/clien
 +  int			is_systemd;	/* Is this a systemd socket? */
 +#endif /* HAVE_SYSTEMD */
  } cupsd_listener_t;
-
-
-diff -up cups-1.6b1/scheduler/listen.c.systemd-socket cups-1.6b1/scheduler/listen.c
---- cups-1.6b1/scheduler/listen.c.systemd-socket	2011-04-16 01:38:13.000000000 +0200
-+++ cups-1.6b1/scheduler/listen.c	2012-05-28 11:16:35.661250556 +0200
+ 
+ 
+diff -up cups-1.7.2/scheduler/listen.c.systemd-socket cups-1.7.2/scheduler/listen.c
+--- cups-1.7.2/scheduler/listen.c.systemd-socket	2013-05-29 13:51:34.000000000 +0200
++++ cups-1.7.2/scheduler/listen.c	2014-04-17 14:05:04.107471974 +0200
 @@ -401,7 +401,11 @@ cupsdStopListening(void)
         lis;
         lis = (cupsd_listener_t *)cupsArrayNext(Listeners))
@@ -206,22 +211,13 @@ diff -up cups-1.6b1/scheduler/listen.c.systemd-socket cups-1.6b1/scheduler/liste
      {
  #ifdef WIN32
        closesocket(lis->fd);
-diff -up cups-1.6b1/scheduler/main.c.systemd-socket cups-1.6b1/scheduler/main.c
---- cups-1.6b1/scheduler/main.c.systemd-socket	2012-05-28 11:16:35.612250897 +0200
-+++ cups-1.6b1/scheduler/main.c	2012-05-28 12:49:32.698375139 +0200
-@@ -26,6 +26,8 @@
-  *   launchd_checkin()     - Check-in with launchd and collect the listening
-  *                           fds.
-  *   launchd_checkout()    - Update the launchd KeepAlive file as needed.
-+ *   systemd_checkin()     - Check-in with systemd and collect the
-+ *                           listening fds.
-  *   parent_handler()      - Catch USR1/CHLD signals...
-  *   process_children()    - Process all dead children...
-  *   select_timeout()      - Calculate the select timeout value.
-@@ -62,6 +64,10 @@
+diff -up cups-1.7.2/scheduler/main.c.systemd-socket cups-1.7.2/scheduler/main.c
+--- cups-1.7.2/scheduler/main.c.systemd-socket	2014-04-17 14:05:04.052472738 +0200
++++ cups-1.7.2/scheduler/main.c	2014-04-17 14:09:39.102634667 +0200
+@@ -39,6 +39,10 @@
  #  endif /* !LAUNCH_JOBKEY_SERVICEIPC */
  #endif /* HAVE_LAUNCH_H */
-
+ 
 +#ifdef HAVE_SYSTEMD
 +#include <systemd/sd-daemon.h>
 +#endif /* HAVE_SYSTEMD */
@@ -229,7 +225,7 @@ diff -up cups-1.6b1/scheduler/main.c.systemd-socket cups-1.6b1/scheduler/main.c
  #if defined(HAVE_MALLOC_H) && defined(HAVE_MALLINFO)
  #  include <malloc.h>
  #endif /* HAVE_MALLOC_H && HAVE_MALLINFO */
-@@ -78,6 +84,9 @@
+@@ -64,6 +68,9 @@
  static void		launchd_checkin(void);
  static void		launchd_checkout(void);
  #endif /* HAVE_LAUNCHD */
@@ -239,10 +235,10 @@ diff -up cups-1.6b1/scheduler/main.c.systemd-socket cups-1.6b1/scheduler/main.c
  static void		parent_handler(int sig);
  static void		process_children(void);
  static void		sigchld_handler(int sig);
-@@ -528,6 +537,13 @@ main(int  argc,				/* I - Number of comm
+@@ -563,6 +570,13 @@ main(int  argc,				/* I - Number of comm
    }
  #endif /* HAVE_LAUNCHD */
-
+ 
 +#ifdef HAVE_SYSTEMD
 + /*
 +  * If we were started by systemd get the listen sockets file descriptors...
@@ -253,10 +249,23 @@ diff -up cups-1.6b1/scheduler/main.c.systemd-socket cups-1.6b1/scheduler/main.c
   /*
    * Startup the server...
    */
-@@ -738,6 +754,15 @@ main(int  argc,				/* I - Number of comm
-	}
+@@ -654,6 +668,12 @@ main(int  argc,				/* I - Number of comm
+                   "Scheduler started via launchd.");
+   else
  #endif /* HAVE_LAUNCHD */
-
++#ifdef HAVE_SYSTEMD
++  sd_notifyf(0, "READY=1\n"
++             "STATUS=Scheduler is running...\n"
++             "MAINPID=%lu",
++             (unsigned long) getpid());
++#endif /* HAVE_SYSTEMD */
+   if (fg)
+     cupsdAddEvent(CUPSD_EVENT_SERVER_STARTED, NULL, NULL,
+                   "Scheduler started in foreground.");
+@@ -751,6 +771,15 @@ main(int  argc,				/* I - Number of comm
+ 	}
+ #endif /* HAVE_LAUNCHD */
+ 
 +#ifdef HAVE_SYSTEMD
 +       /*
 +	* If we were started by systemd get the listen sockets file
@@ -269,10 +278,10 @@ diff -up cups-1.6b1/scheduler/main.c.systemd-socket cups-1.6b1/scheduler/main.c
         /*
          * Startup the server...
          */
-@@ -1516,6 +1541,102 @@ launchd_checkout(void)
+@@ -1500,6 +1529,102 @@ launchd_checkout(void)
  }
  #endif /* HAVE_LAUNCHD */
-
+ 
 +#ifdef HAVE_SYSTEMD
 +static void
 +systemd_checkin(void)
@@ -369,27 +378,27 @@ diff -up cups-1.6b1/scheduler/main.c.systemd-socket cups-1.6b1/scheduler/main.c
 +  }
 +}
 +#endif /* HAVE_SYSTEMD */
-
+ 
  /*
   * 'parent_handler()' - Catch USR1/CHLD signals...
-diff -up cups-1.6b1/scheduler/Makefile.systemd-socket cups-1.6b1/scheduler/Makefile
---- cups-1.6b1/scheduler/Makefile.systemd-socket	2012-05-21 19:40:22.000000000 +0200
-+++ cups-1.6b1/scheduler/Makefile	2012-05-28 11:16:35.663250542 +0200
-@@ -371,7 +371,7 @@ cupsd:	$(CUPSDOBJS) $(LIBCUPSMIME) ../cu
-	$(CC) $(LDFLAGS) -o cupsd $(CUPSDOBJS) -L. -lcupsmime \
-		$(LIBZ) $(SSLLIBS) $(LIBSLP) $(LIBLDAP) $(PAMLIBS) \
-		$(LIBPAPER) $(LIBMALLOC) $(SERVERLIBS) $(DNSSDLIBS) $(LIBS) \
+diff -up cups-1.7.2/scheduler/Makefile.systemd-socket cups-1.7.2/scheduler/Makefile
+--- cups-1.7.2/scheduler/Makefile.systemd-socket	2013-05-29 13:51:34.000000000 +0200
++++ cups-1.7.2/scheduler/Makefile	2014-04-17 14:05:04.108471960 +0200
+@@ -381,7 +381,7 @@ cupsd:	$(CUPSDOBJS) $(LIBCUPSMIME) ../cu
+ 	$(CC) $(LDFLAGS) -o cupsd $(CUPSDOBJS) -L. -lcupsmime \
+ 		$(LIBZ) $(SSLLIBS) $(LIBSLP) $(LIBLDAP) $(PAMLIBS) \
+ 		$(LIBPAPER) $(LIBMALLOC) $(SERVERLIBS) $(DNSSDLIBS) $(LIBS) \
 -		$(LIBGSSAPI) $(LIBWRAP)
 +		$(LIBGSSAPI) $(LIBWRAP) $(SDLIBS)
-
+ 
  cupsd-static:	$(CUPSDOBJS) libcupsmime.a ../cups/$(LIBCUPSSTATIC)
-	echo Linking $@...
-@@ -379,7 +379,7 @@ cupsd-static:	$(CUPSDOBJS) libcupsmime.a
-		$(LIBZ) $(SSLLIBS) $(LIBSLP) $(LIBLDAP) $(PAMLIBS) \
-		../cups/$(LIBCUPSSTATIC) $(COMMONLIBS) $(LIBZ) $(LIBPAPER) \
-		$(LIBMALLOC) $(SERVERLIBS) $(DNSSDLIBS) $(LIBGSSAPI) \
+ 	echo Linking $@...
+@@ -389,7 +389,7 @@ cupsd-static:	$(CUPSDOBJS) libcupsmime.a
+ 		$(LIBZ) $(SSLLIBS) $(LIBSLP) $(LIBLDAP) $(PAMLIBS) \
+ 		../cups/$(LIBCUPSSTATIC) $(COMMONLIBS) $(LIBZ) $(LIBPAPER) \
+ 		$(LIBMALLOC) $(SERVERLIBS) $(DNSSDLIBS) $(LIBGSSAPI) \
 -		$(LIBWRAP)
 +		$(LIBWRAP)  $(SDLIBS)
-
+ 
  tls.o:	tls-darwin.c tls-gnutls.c tls-openssl.c
-
+ 
